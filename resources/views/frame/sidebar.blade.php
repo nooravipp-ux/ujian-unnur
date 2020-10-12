@@ -2,17 +2,22 @@
     <div class="menu_section">
         <h3>General</h3>
         <ul class="nav side-menu">
+            <li class="@yield('title_dash')"><a href="{{ url('/dash') }}"><i class="fa fa-tachometer"></i>Dashboard</a>
             @can('manage-dosen')             
                 <li class="@yield('title_1')"><a><i class="fa fa-clone"></i>Bank Soal <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu" style="@yield('display')">
                     <li class="@yield('title_2_kat')"><a href="{{ url('/dosen/kategori_soal') }}">Kategori Soal</a></li>
                     <li class="@yield('title_2_soal')"><a href="{{ url('/dosen/paket_soal') }}">Soal</a></li>
+                    <li class="@yield('title_2_lap')"><a href="{{ url('/dosen/laporan') }}">Laporan</a></li>
                     </ul>
                 </li>
             @endcan
             @can('manage-mhs')
                 <li class="@yield('title_1')"><a href="{{ url('/mhs/ujian') }}"><i class="fa fa-tasks"></i>Ujian</a>
             @endcan
+            @can('manage-admin')
+                <li class="@yield('title_1')"><a href="{{ url('/admin/pengaturan') }}"><i class="fa fa-cogs"></i>Pengaturan</a>
+        @endcan
         </ul>
     </div>
 </div>

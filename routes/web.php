@@ -26,7 +26,12 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/frame','FrameController@index')->middleware('auth');
 Route::get('/dash','DashboardController@index')->middleware('auth');
-
+//admin
+    //pengaturan
+    Route::get('/admin/pengaturan','PengaturanController@index_pengaturan');
+        //form_nilai_mhs
+        Route::get('/admin/pengaturan/update_form_nilai_mhs/aktif','PengaturanController@update_nilai_mhs_aktif')->name('update_nilai_mhs.aktif');
+        Route::get('/admin/pengaturan/update_form_nilai_mhs/nonaktif','PengaturanController@update_nilai_mhs_nonaktif')->name('update_nilai_mhs.nonaktif');
 //dosen
     //kategori_soal
     Route::get('/dosen/kategori_soal','KategoriSoalController@index');
@@ -47,9 +52,23 @@ Route::get('/dash','DashboardController@index')->middleware('auth');
         Route::get('/dosen/paket_soal/soal/hapus/{id}','SoalController@hapus_soal')->name('hapus.soal');
         Route::get('/dosen/paket_soal/soal/get_soal','SoalController@get_soal')->name('get.soal');
         Route::post('/dosen/paket_soal/soal/ubah','SoalController@ubah_soal')->name('ubah.soal');
+        Route::get('/dosen/paket_soal/soal/salin/{id}','SoalController@salin_soal')->name('salin.soal');
+        //input soal essay
+        Route::post('/dosen/paket_soal/soal/simpan_essay','SoalController@simpan_soal_essay')->name('simpan.soal_essay');
+        Route::get('/dosen/paket_soal/soal/hapus_essay/{id}','SoalController@hapus_soal_essay')->name('hapus.soal_essay');
+        Route::get('/dosen/paket_soal/soal/get_soal_essay','SoalController@get_soal_essay')->name('get.soal_essay');
+        Route::post('/dosen/paket_soal/soal/ubah_essay','SoalController@ubah_soal_essay')->name('ubah.soal_essay');
+        Route::get('/dosen/paket_soal/soal/salin_essay/{id}','SoalController@salin_soal_essay')->name('salin.soal_essay');
         //role soal
         Route::get('/dosen/paket_soal/soal/role_soal/simpan/{id}','SoalController@role_soal')->name('simpan.role_soal');
         Route::get('/dosen/paket_soal/soal/role_soal/hapus/{id}','SoalController@hapus_role_soal')->name('hapus.role_soal');
+    //laporan
+    Route::get('/dosen/laporan','LaporanController@index');
+    Route::get('/dosen/laporan/list-paket/{id}','LaporanController@get_data_paket')->name('show.list-paket');
+    Route::get('/dosen/laporan/list-mhs/{id}','LaporanController@get_data_mhs')->name('show.list-mhs');
+    Route::get('/dosen/laporan/list-mhs/detail-mhs/{id_mhs}/{id_paket}','LaporanController@get_detail_mhs')->name('show.detail-mhs');
+       
+        
 //mhs
     //ujian
     Route::get('/mhs/ujian','MhsController@index_ujian');

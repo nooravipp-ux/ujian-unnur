@@ -28,7 +28,7 @@
                 <div class="row">
                     @foreach($data_paket as $item)
                     <?php
-                      $cek_soal = DB::table('tbl_nilai')->where('id_paket_soal', $item->id_paket_soal)->where('id_mhs', $id_mhs)->first();
+                      $cek_soal = DB::table('tbl_jawab_pg')->where('id_paket_soal', $item->id_paket_soal)->where('id_mhs', $id_mhs)->first();
                     ?>
                     <div class="form-group col-md-3 col-sm-3">
 
@@ -36,6 +36,7 @@
                             <div class="card-header text-white bg-secondary">Paket Soal</div>
                             <div class="card-body ">
                             <h5 class="card-title">{{ $item->nama_paket_soal }}</h5>
+                            <p class="card-text">Kategori Soal : <b>{{ $item->nama_kategori_soal }}</b></p>
                             @if($cek_soal)
                               <p class="card-text">Status : Sudah Dikerjakan</p>
                               <a href="#" class="btn btn-danger btn-sm">Sudah Kerjakan</a>

@@ -40,6 +40,7 @@
                     <th>Nama Paket Soal</th>
                     <th>Kategori Soal</th>
                     <th>Waktu Mengerjakan</th>
+                    <th>Status Soal</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -50,6 +51,13 @@
                         <td>{{ $item->nama_paket_soal }}</td>
                         <td>{{ $item->nama_kategori_soal }}</td>
                         <td>{{ $item->waktu }} menit</td>
+                        <td>
+                            @if($item->status == "aktif")
+                            <p class="btn btn-round btn-success btn-sm">Aktif</p>
+                            @else
+                            <p class="btn btn-round btn-danger btn-sm">Nonaktif</p>
+                            @endif
+                        </td>
                         <td>
                             <button id="btnUbah" data-toggle="modal" data-target="#modalUbah" onclick="tampilData('{{ $item->id_paket_soal }}');" class="btn btn-success btn-sm">Ubah</button>
                             <a href="{{ route('hapus.paket_soal',$item->id_paket_soal) }}" class="btn btn-danger btn-sm" onclick="return confirm('apakah data ini akan di hapus?, {{ $item->nama_paket_soal }}')">Hapus</a>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use DB;
 use Image;
@@ -13,6 +14,7 @@ class SoalController extends Controller
 
         $data_paket = DB::table('tbl_kategori_soal')
         ->join('tbl_paket_soal','tbl_kategori_soal.id_kategori_soal','=','tbl_paket_soal.id_kategori_soal')
+        ->join('tbl_role_soal','tbl_paket_soal.id_paket_soal','=','tbl_role_soal.id_paket_soal')
         ->get(); 
 
         return view('dosen.soal.index', compact('data_paket'));
@@ -49,6 +51,14 @@ class SoalController extends Controller
             "updated_at" => date('Y-m-d H:i:s'),
         ]);
 
+        DB::table('tbl_role_soal')->insert([
+            'id_dosen' => Auth::user()->id,
+            'id_paket_soal' => $kodeautopaket,
+            'id_prodi' => Auth::user()->id_prodi,
+            "created_at" =>  date('Y-m-d H:i:s'),
+            "updated_at" => date('Y-m-d H:i:s'),
+        ]);
+
         return redirect('/dosen/paket_soal');
     }
 
@@ -72,6 +82,10 @@ class SoalController extends Controller
         ->delete();
 
         DB::table('tbl_soal')
+        ->where('id_paket_soal', $id)
+        ->delete();
+
+        DB::table('tbl_role_soal')
         ->where('id_paket_soal', $id)
         ->delete();
 
@@ -116,7 +130,11 @@ class SoalController extends Controller
         ->join('tbl_soal','tbl_paket_soal.id_paket_soal','=','tbl_soal.id_paket_soal')
         ->where('tbl_paket_soal.id_paket_soal', $id)->get();
 
-        return view('dosen.soal.input', compact('data_paket','data_soal','cek_role_soal'));
+        $data_soal_essay = DB::table('tbl_paket_soal')
+        ->join('tbl_soal_essay','tbl_paket_soal.id_paket_soal','=','tbl_soal_essay.id_paket_soal')
+        ->where('tbl_paket_soal.id_paket_soal', $id)->get();
+
+        return view('dosen.soal.input', compact('data_paket','data_soal','cek_role_soal','data_soal_essay'));
     }
 
     public function simpan_soal(Request $request){
@@ -131,6 +149,7 @@ class SoalController extends Controller
                 'pilihan_b' => $request->pil_b,
                 'pilihan_c' => $request->pil_c,
                 'pilihan_d' => $request->pil_d,
+                'pilihan_e' => $request->pil_e,
                 'kunci' => $request->kunci,
                 'nilai_soal' => $request->nilai_soal,
                 'gambar' => $gambar,
@@ -145,8 +164,34 @@ class SoalController extends Controller
                 'pilihan_b' => $request->pil_b,
                 'pilihan_c' => $request->pil_c,
                 'pilihan_d' => $request->pil_d,
+                'pilihan_e' => $request->pil_e,
                 'kunci' => $request->kunci,
                 'nilai_soal' => $request->nilai_soal,
+                "created_at" =>  date('Y-m-d H:i:s'),
+                "updated_at" => date('Y-m-d H:i:s'),
+            ]);
+        }
+        
+        return back();
+
+    }
+
+    public function simpan_soal_essay(Request $request){
+
+        if(!empty($request->gambar_essay)){
+            $gambar = Image::make($request->gambar_essay)->fit(400)->encode('data-url');
+
+            DB::table('tbl_soal_essay')->insert([
+                'id_paket_soal' => $request->id_paket_soal,
+                'soal_essay' => $request->soal_essay,
+                'gambar_essay' => $gambar,
+                "created_at" =>  date('Y-m-d H:i:s'),
+                "updated_at" => date('Y-m-d H:i:s'),
+            ]);
+        }else{
+            DB::table('tbl_soal_essay')->insert([
+                'id_paket_soal' => $request->id_paket_soal,
+                'soal_essay' => $request->soal_essay,
                 "created_at" =>  date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s'),
             ]);
@@ -164,10 +209,85 @@ class SoalController extends Controller
 
         return back();
     }
+    public function hapus_soal_essay($id){
+
+        DB::table('tbl_soal_essay')
+        ->where('id_soal_essay', $id)
+        ->delete();
+
+        return back();
+    }
+
+    public function salin_soal($id){
+        $data_soal = DB::table('tbl_soal')->where('id_soal', $id)->first();
+
+        if(!empty($data_soal->gambar)){
+            DB::table('tbl_soal')->insert([
+                'id_paket_soal' => $data_soal->id_paket_soal,
+                'soal' => $data_soal->soal,
+                'pilihan_a' => $data_soal->pilihan_a,
+                'pilihan_b' => $data_soal->pilihan_b,
+                'pilihan_c' => $data_soal->pilihan_c,
+                'pilihan_d' => $data_soal->pilihan_d,
+                'pilihan_e' => $data_soal->pilihan_e,
+                'kunci' => $data_soal->kunci,
+                'nilai_soal' => $data_soal->nilai_soal,
+                'gambar' => $data_soal->gambar,
+                "created_at" =>  date('Y-m-d H:i:s'),
+                "updated_at" => date('Y-m-d H:i:s'),
+            ]);
+        }else{
+            DB::table('tbl_soal')->insert([
+                'id_paket_soal' => $data_soal->id_paket_soal,
+                'soal' => $data_soal->soal,
+                'pilihan_a' => $data_soal->pilihan_a,
+                'pilihan_b' => $data_soal->pilihan_b,
+                'pilihan_c' => $data_soal->pilihan_c,
+                'pilihan_d' => $data_soal->pilihan_d,
+                'pilihan_e' => $data_soal->pilihan_e,
+                'kunci' => $data_soal->kunci,
+                'nilai_soal' => $data_soal->nilai_soal,
+                "created_at" =>  date('Y-m-d H:i:s'),
+                "updated_at" => date('Y-m-d H:i:s'),
+            ]);
+        }
+
+        return back();
+    }
+
+    public function salin_soal_essay($id){
+        $data_soal = DB::table('tbl_soal_essay')->where('id_soal_essay', $id)->first();
+
+        if(!empty($data_soal->gambar_essay)){
+            DB::table('tbl_soal_essay')->insert([
+                'id_paket_soal' => $data_soal->id_paket_soal,
+                'soal_essay' => $data_soal->soal_essay,
+                'gambar_essay' => $data_soal->gambar_essay,
+                "created_at" =>  date('Y-m-d H:i:s'),
+                "updated_at" => date('Y-m-d H:i:s'),
+            ]);
+        }else{
+            DB::table('tbl_soal_essay')->insert([
+                'id_paket_soal' => $data_soal->id_paket_soal,
+                'soal_essay' => $data_soal->soal_essay,
+                "created_at" =>  date('Y-m-d H:i:s'),
+                "updated_at" => date('Y-m-d H:i:s'),
+            ]);
+        }
+
+        return back();
+    }
 
     public function get_soal(Request $request){
 
         $data = DB::table('tbl_soal')->where('id_soal', $request->id_soal)->first();
+
+        return response()->json($data);
+    }
+
+    public function get_soal_essay(Request $request){
+
+        $data = DB::table('tbl_soal_essay')->where('id_soal_essay', $request->id_soal_essay)->first();
 
         return response()->json($data);
     }
@@ -185,10 +305,10 @@ class SoalController extends Controller
                 'pilihan_b' => $request->pil_b,
                 'pilihan_c' => $request->pil_c,
                 'pilihan_d' => $request->pil_d,
+                'pilihan_e' => $request->pil_e,
                 'kunci' => $request->kunci,
                 'nilai_soal' => $request->nilai_soal,
                 'gambar' => $gambar,
-                "created_at" =>  date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s'),
             ]);
         }else{
@@ -200,9 +320,33 @@ class SoalController extends Controller
                 'pilihan_b' => $request->pil_b,
                 'pilihan_c' => $request->pil_c,
                 'pilihan_d' => $request->pil_d,
+                'pilihan_e' => $request->pil_e,
                 'kunci' => $request->kunci,
                 'nilai_soal' => $request->nilai_soal,
-                "created_at" =>  date('Y-m-d H:i:s'),
+                "updated_at" => date('Y-m-d H:i:s'),
+            ]);
+        }
+
+        return back();
+    }
+
+    public function ubah_soal_essay(Request $request){
+
+        if(!empty($request->gambar_essay)){
+            $gambar = Image::make($request->gambar_essay)->fit(400)->encode('data-url');
+
+            DB::table('tbl_soal_essay')
+            ->where('id_soal_essay', $request->id_soal_essay)
+            ->update([
+                'soal_essay' => $request->soal_essay,
+                'gambar_essay' => $gambar,
+                "updated_at" => date('Y-m-d H:i:s'),
+            ]);
+        }else{
+            DB::table('tbl_soal_essay')
+            ->where('id_soal_essay', $request->id_soal_essay)
+            ->update([
+                'soal_essay' => $request->soal_essay,
                 "updated_at" => date('Y-m-d H:i:s'),
             ]);
         }
@@ -213,12 +357,17 @@ class SoalController extends Controller
     public function role_soal($id){
 
         $id_prodi = Auth::user()->id_prodi;
+        $id_dosen = Auth::user()->id;
 
-        DB::table('tbl_role_soal')->insert([
-            'id_paket_soal' => $id,
-            'id_prodi' => $id_prodi,
-            "created_at" =>  date('Y-m-d H:i:s'),
-            "updated_at" => date('Y-m-d H:i:s'),
+        DB::table('tbl_role_soal')
+        ->where([
+                ['id_paket_soal', $id],
+                ['id_dosen', $id_dosen],
+                ['id_prodi', $id_prodi]
+            ])
+        ->update([
+            'status' => 'aktif',
+            "updated_at" => date('Y-m-d H:i:s'), 
         ]);
 
         return back();
@@ -227,26 +376,31 @@ class SoalController extends Controller
     public function hapus_role_soal($id){
 
         $id_prodi = Auth::user()->id_prodi;
+        $id_dosen = Auth::user()->id;
+
 
         DB::table('tbl_role_soal')
         ->where([
             ['id_paket_soal', $id],
+            ['id_dosen', $id_dosen],
             ['id_prodi', $id_prodi]
         ])
-        ->delete();
+        ->update([
+            'status' => 'nonaktif',
+            "updated_at" => date('Y-m-d H:i:s'), 
+        ]);
 
         return back();
     }
 
     public function cek_role_soal($id_paket,$id_prodi){
-        $data_role = DB::table('tbl_role_soal')
-        ->where([
-            ['id_paket_soal', $id_paket],
-            ['id_prodi', $id_prodi]
-        ])
-        ->count();
+
+        $role = DB::select("select status from tbl_role_soal where id_paket_soal='".$id_paket."' and id_prodi='".$id_prodi."'");     
+        $sorted_role = Arr::get($role,0);
+        $sortedd_role = Arr::flatten($sorted_role);
+        $data_role = Arr::get($sortedd_role,0); 
         
-        if($data_role == "1"){
+        if($data_role == "aktif"){
             return true;
         }else{
             return false;

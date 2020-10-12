@@ -29,7 +29,7 @@
                     <div class="col-sm-12">
                         <table>
                             <tbody>
-                              <form name="myform" action="{{ route('cek.jawaban') }}" method="POST">
+                              <form name="" action="{{ route('cek.jawaban') }}" method="POST">
                                 @csrf
                                 @foreach ($data_soal as $item)
                                         <input type="hidden" name="id_soal[]" value="{{ $item->id_soal }}">
@@ -64,9 +64,45 @@
                                             <td></td>
                                             <td>D. <input type="radio" value="D" name="pilihan[{{ $item->id_soal }}]">&nbsp;{{ $item->pilihan_d }}</td>
                                         </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>E. <input type="radio" value="E" name="pilihan[{{ $item->id_soal }}]">&nbsp;{{ $item->pilihan_e }}</td>
+                                        </tr>
                                         @endforeach
                             </tbody>
                         </table>
+                        <br>
+                        <p><h5><b>Soal Essay :</b></h5></p>
+                        <br>
+                        <table>
+                          <tbody>
+                              @csrf
+                              @foreach ($data_soal_essay as $item)
+                                      <input type="hidden" name="id_soal_essay[]" value="{{ $item->id_soal_essay }}">
+                                      <input type="hidden" name="jumlah_soal_essay" value="{{ $jumlah_soal_essay }}">
+
+                                      <tr>
+                                          <td>{{ $no_essay = $no_essay+1 }}. </td>
+                                          <td>{{ $item->soal_essay }}</td>
+                                      </tr>
+
+                                      @if(!empty($item->gambar_essay))
+                                          <tr>
+                                              <td></td>
+                                              <td style="height: 20%; width: 100%;"><img src="{{ $item->gambar_essay }}" alt="" width="200" height="200"></td>
+                                          </tr>
+                                      @endif
+
+                                      <tr>
+                                          <td></td>
+                                          <td>
+                                            {{-- <input type="radio" value="A" name="pilihan[{{ $item->id_soal }}]">&nbsp;{{ $item->pilihan_a }} --}}
+                                            <textarea id="soal_essay" name="jawab_essay[{{ $item->id_soal_essay }}]" class="form-control" rows="3" placeholder="Isi Jawaban Dengan Benar!" style="margin-top: 0px; margin-bottom: 0px; height: 100px;"></textarea>
+                                          </td>
+                                      </tr>
+                                      @endforeach
+                          </tbody>
+                      </table>
                         <br>
                         <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Apakah Anda yakin dengan jawaban Anda ?')">Selesai</button>
                         </form>
