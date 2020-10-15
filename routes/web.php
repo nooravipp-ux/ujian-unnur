@@ -67,6 +67,7 @@ Route::get('/dash','DashboardController@index')->middleware('auth');
     Route::get('/dosen/laporan/list-paket/{id}','LaporanController@get_data_paket')->name('show.list-paket');
     Route::get('/dosen/laporan/list-mhs/{id}','LaporanController@get_data_mhs')->name('show.list-mhs');
     Route::get('/dosen/laporan/list-mhs/detail-mhs/{id_mhs}/{id_paket}','LaporanController@get_detail_mhs')->name('show.detail-mhs');
+    Route::get('/dosen/laporan/listh-mhs/detail-mhs/get_data_jawaban_essay','LaporanController@get_data_jawaban_essay')->name('get.data_jawab_essay');
        
         
 //mhs

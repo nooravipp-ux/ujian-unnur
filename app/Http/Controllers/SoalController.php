@@ -85,6 +85,10 @@ class SoalController extends Controller
         ->where('id_paket_soal', $id)
         ->delete();
 
+        DB::table('tbl_soal_essay')
+        ->where('id_paket_soal', $id)
+        ->delete();
+
         DB::table('tbl_role_soal')
         ->where('id_paket_soal', $id)
         ->delete();

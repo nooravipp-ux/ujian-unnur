@@ -92,4 +92,15 @@ class LaporanController extends Controller
 
         return view('dosen.laporan.detail-mhs', compact('data_mhs','data_jawab_pg','data_jawab_essay','data_nilai'));
     }
+
+    public function get_data_jawaban_essay(Request $request){
+
+        $data = DB::table('tbl_soal_essay')
+                    ->join('tbl_jawab_essay','tbl_soal_essay.id_soal_essay','=','tbl_jawab_essay.id_soal_essay')
+                    ->where([
+                        ['tbl_jawab_essay.id_soal_essay', $request->id_soal_essay]
+                        ])    
+                    ->first();
+        return response()->json($data);
+    }
 }

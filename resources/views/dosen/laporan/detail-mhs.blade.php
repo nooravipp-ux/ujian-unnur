@@ -131,6 +131,7 @@
                   <tr>
                       <th>Soal</th>
                       <th>Jawaban</th>
+                      <th>Action</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -138,6 +139,9 @@
                   <tr>
                       <td>{{ $item->soal_essay }}</td>
                       <td>{{ $item->jawaban_essay }}</td>
+                      <td>
+                        <button id="btnView" data-toggle="modal" data-target="#modalView" onclick="tampilData('{{ $item->id_soal_essay }}');" class="btn btn-success btn-sm">Detail</button>
+                      </td>
                   </tr>              
                   @endforeach
                   </tbody>
@@ -154,6 +158,34 @@
   </div>
   <!-- /page content -->
 
+  <!-- Modal View-->
+  <div class="modal fade" id="modalView" tabindex="-1" role="dialog" aria-labelledby="modalViewLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="modalViewLabel">Detail Jawaban Essay</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="">Soal</label>
+            <textarea id="soal_essay" name="soal_essay" class="form-control" rows="3"  style="margin-top: 0px; margin-bottom: 0px; height: 200px;" readonly></textarea>
+          </div>
+          <div class="form-group">
+            <label for="">Jawaban Essay</label>
+            <textarea id="jawaban_essay" name="jawaban_essay" class="form-control" rows="3"  style="margin-top: 0px; margin-bottom: 0px; height: 200px;" readonly></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+        
+        </div>
+    </div>
+    </div>
+</div>
+<!-- End Modal -->
+
   
 
 @endsection
@@ -163,5 +195,20 @@
   $(document).ready(function() {
       $('#datatable-1').DataTable();
   } );
+</script>
+<script>
+  function tampilData (id) {
+      var get_id = id;
+
+      $.ajax({
+      type : "GET",
+      url:'{{route('get.data_jawab_essay')}}',
+      data:{'id_soal_essay':get_id},
+      success:function(data){
+                  $("#soal_essay").val(data.soal_essay);
+                  $("#jawaban_essay").val(data.jawaban_essay);
+      }
+    });
+  }
 </script>
 @endsection
