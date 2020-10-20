@@ -15,7 +15,7 @@ class CreateTblSoalEssayTable extends Migration
     {
         Schema::create('tbl_soal_essay', function (Blueprint $table) {
             $table->id('id_soal_essay');
-            $table->foreignId('id_soal_paket')
+            $table->foreignId('id_soal_paket');
             $table->text('soal_essay');
             $table->binary('gambar_essay');
             $table->timestamps();
