@@ -42,6 +42,7 @@ Route::get('/dash','DashboardController@index')->middleware('auth');
     //soal
     Route::get('/dosen/paket_soal','SoalController@index');
     Route::get('/dosen/soal/get_data_kategori','SoalController@get_data_kategori');
+    Route::get('/dosen/soal/get_data_matkul','SoalController@get_data_matkul');
     Route::post('/dosen/paket_soal/simpan','SoalController@simpan_paket')->name('simpan.paket_soal');
     Route::get('/dosen/paket_soal/get_paket','SoalController@get_paket')->name('get.paket');
     Route::post('/dosen/paket_soal/ubah','SoalController@ubah_paket')->name('ubah.paket_soal');
@@ -68,6 +69,8 @@ Route::get('/dash','DashboardController@index')->middleware('auth');
     Route::get('/dosen/laporan/list-mhs/{id}','LaporanController@get_data_mhs')->name('show.list-mhs');
     Route::get('/dosen/laporan/list-mhs/detail-mhs/{id_mhs}/{id_paket}','LaporanController@get_detail_mhs')->name('show.detail-mhs');
     Route::get('/dosen/laporan/listh-mhs/detail-mhs/get_data_jawaban_essay','LaporanController@get_data_jawaban_essay')->name('get.data_jawab_essay');
+     //update nilai
+     Route::post('/dosen/laporan/list-mhs/detail-mhs/update_nilai','LaporanController@confirm_nilai')->name('post.nilai');
        
         
 //mhs

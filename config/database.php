@@ -62,6 +62,43 @@ return [
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
+        'mysql2' => [
+            'driver'    => env('DB_CONNECTION_SISTEMIK'),
+            'host'      => env('DB_HOST_SISTEMIK'),
+            'port'      => env('DB_PORT_SISTEMIK'),
+            'database'  => env('DB_DATABASE_SISTEMIK'),
+            'username'  => env('DB_USERNAME_SISTEMIK'),
+            'password'  => env('DB_PASSWORD_SISTEMIK'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
+        'mysql3' => [
+            'driver'    => env('DB_CONNECTION_PMB'),
+            'host'      => env('DB_HOST_PMB'),
+            'port'      => env('DB_PORT_PMB'),
+            'database'  => env('DB_DATABASE_PMB'),
+            'username'  => env('DB_USERNAME_PMB'),
+            'password'  => env('DB_PASSWORD_PMB'),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
 
         'pgsql' => [
             'driver' => 'pgsql',

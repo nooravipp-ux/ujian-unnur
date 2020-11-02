@@ -15,6 +15,7 @@ class SoalController extends Controller
         $data_paket = DB::table('tbl_kategori_soal')
         ->join('tbl_paket_soal','tbl_kategori_soal.id_kategori_soal','=','tbl_paket_soal.id_kategori_soal')
         ->join('tbl_role_soal','tbl_paket_soal.id_paket_soal','=','tbl_role_soal.id_paket_soal')
+        ->where('tbl_role_soal.id_dosen', Auth::user()->id)
         ->get(); 
 
         return view('dosen.soal.index', compact('data_paket'));
@@ -118,6 +119,27 @@ class SoalController extends Controller
         $data_kategori = DB::table('tbl_kategori_soal')->get();
 
         return response()->json($data_kategori);
+    }
+
+    public function get_data_matkul(Request $request){
+        if ($request->has('q')) {
+            $cari = $request->q;
+            $db_sistemik = DB::connection('mysql2');
+
+            $data_matkul = $db_sistemik->table('mat_kurikulum')
+                        ->orWhere('kode_mk', 'LIKE', '%'.$cari.'%')
+                        ->orWhere('nama_mk', 'LIKE', '%'.$cari.'%')
+                        ->get();
+    
+            return response()->json($data_matkul);
+        }
+
+        $db_sistemik = DB::connection('mysql2');
+        $data_matkul = $db_sistemik->table('mat_kurikulum')
+                    ->where('kode_jurusan', Auth::user()->id_prodi)
+                    ->get();
+
+        return response()->json($data_matkul);
     }
 
     public function tampil_input_soal($id){
@@ -410,4 +432,6 @@ class SoalController extends Controller
             return false;
         }
     }
+
+
 }

@@ -47,7 +47,8 @@
                           ->join('tbl_role_soal','tbl_paket_soal.id_paket_soal','=','tbl_role_soal.id_paket_soal')
                           ->where([
                             ['tbl_kategori_soal.id_kategori_soal', $item->id_kategori_soal],
-                            ['tbl_role_soal.id_prodi', Auth::user()->id_prodi]
+                            ['tbl_role_soal.id_prodi', Auth::user()->id_prodi],
+                            ['tbl_role_soal.id_dosen', Auth::user()->id]
                             ])
                           ->get();
                 ?>

@@ -4,6 +4,10 @@
 @section('display','display: block;')
 @section('style')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    .page-body .select2-drop {z-index: 10052;}
+    .select2-drop-mask {z-index: 10052;}
+</style>
 @endsection
 @section('content')
 <!-- page content -->
@@ -99,6 +103,9 @@
                     <label for="">Nama Paket Soal</label>
                     <input type="text" name="nama_paket_soal" id="nama_paket_soal" class="form-control" placeholder="ex: Bahasa Inggris">
                 </div>
+                {{-- <div class="form-group">
+                    <select name="matkul" id="matkul" class="js-example-basic-responsive" style="width: 80%"></select>
+                </div> --}}
                 <div class="form-group">
                     <label for="">Waktu Mengerjakan</label>
                     <input type="text" name="waktu" id="waktu" class="form-control" placeholder="ex: 60 *Satuan Menit">
@@ -175,6 +182,7 @@
 $(document).ready(function(){
 
     $('#kategori_soal').select2({
+        dropdownParent: $("#modalSimpan"),
         placeholder: '- Pilih Kategori Soal -',
         ajax: {
             url: '{{ url('/dosen/soal/get_data_kategori') }}',
@@ -206,6 +214,27 @@ $(document).ready(function(){
                         return {
                             id: kategori.id_kategori_soal,
                             text: kategori.nama_kategori_soal
+                        }
+                    })
+                };
+            },
+            cache: true
+        }
+    });
+
+    $('#matkul').select2({
+        dropdownParent: $("#modalSimpan"),
+        placeholder: '- Pilih Mata Kuliah -',
+        ajax: {
+            url: '{{url('/dosen/soal/get_data_matkul')}}',
+            dataType: 'json',
+            delay: 250,
+            processResults: function(data) {
+                return {
+                    results: $.map(data, function(matkul) {
+                        return {
+                            id: matkul.kode_mk,
+                            text: matkul.nama_mk
                         }
                     })
                 };

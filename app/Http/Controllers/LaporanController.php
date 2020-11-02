@@ -51,6 +51,8 @@ class LaporanController extends Controller
         
         $data_mhs = DB::table('tbl_kategori_soal')
                     ->select(
+                        'users.id',
+                        'users.username',
                         'users.name',
                         'users.id_prodi',
                         'tbl_kategori_soal.nama_kategori_soal',
@@ -102,5 +104,30 @@ class LaporanController extends Controller
                         ])    
                     ->first();
         return response()->json($data);
+    }
+
+    public function confirm_nilai(Request $request){
+
+        $nilai = $request->nilai_pg + $request->nilai_essay;
+
+        $data_mhs = DB::table('users')->where('id',$request->id_mhs)->first();
+
+        if($data_mhs->status == "calon"){
+            DB::table('tbl_nilai')->where('id_mhs', $request->id_mhs)->update([
+                'nilai_essay' => $request->nilai_essay,
+                'nilai'=> $nilai
+            ]);
+    
+            $db_pmb = DB::connection('mysql3');
+    
+            $update_nilai = $db_pmb->table('pmb_pendaftar')->where('id_test', $request->username)->update(['nilai_ujian' => $nilai]);
+        }else{
+            DB::table('tbl_nilai')->where('id_mhs', $request->id_mhs)->update([
+                'nilai_essay' => $request->nilai_essay,
+                'nilai'=> $nilai
+            ]);
+        }
+
+        return back();    
     }
 }

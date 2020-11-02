@@ -96,6 +96,8 @@
         <div class="row">
           <div class="col-sm-4">
             <h5>&nbsp;&nbsp;Penilaian</h5>
+            <form action="{{ route('post.nilai') }}" method="POST">
+              @csrf
               <table class="table">
                   <tbody>
                       <tr>
@@ -109,7 +111,16 @@
                         <td>Jumlah Nilai Soal Essay</td>
                         <td>:</td>
                         <td>
-                            <input type="text" class="form-control" id="nilai_essay" name="nilai_essay">
+                            <input type="text" class="form-control" id="nilai_essay" name="nilai_essay" value="{{ $data_nilai->nilai_essay }}">
+                            <input type="hidden" id="id_mhs" name="id_mhs" value="{{ $data_mhs->id }}">
+                            <input type="hidden" name="username" id="username" value="{{ $data_mhs->username }}">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Total Nilai</td>
+                        <td>:</td>
+                        <td>
+                            <input type="text" class="form-control" id="total_nilai" name="total_nilai" value="{{ $data_nilai->nilai }}" readonly>
                         </td>
                     </tr>
                     <tr>
@@ -121,6 +132,7 @@
                   </tr>
                   </tbody>
               </table>
+            </form>  
 
           </div>
           <div class="col-sm-8">

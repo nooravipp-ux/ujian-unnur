@@ -14,16 +14,32 @@ class MhsController extends Controller
     public function index_ujian(){
 
         $id_prodi = Auth::user()->id_prodi;
+        $status = Auth::user()->status;
 
-        $data_paket = DB::table('tbl_kategori_soal')
+        if( $status == "calon"){
+            $data_paket = DB::table('tbl_kategori_soal')
+            ->join('tbl_paket_soal','tbl_kategori_soal.id_kategori_soal','=','tbl_paket_soal.id_kategori_soal')
+            ->join('tbl_role_soal','tbl_paket_soal.id_paket_soal','=','tbl_role_soal.id_paket_soal')
+            ->where([
+                ['tbl_kategori_soal.id_kategori_soal', 'KAT001'],
+                ['tbl_role_soal.id_prodi', $id_prodi],
+                ['tbl_role_soal.status', 'aktif']
+                ])
+            ->get();
+        }else{
+            $data_paket = DB::table('tbl_kategori_soal')
                 ->join('tbl_paket_soal','tbl_kategori_soal.id_kategori_soal','=','tbl_paket_soal.id_kategori_soal')
                 ->join('tbl_role_soal','tbl_paket_soal.id_paket_soal','=','tbl_role_soal.id_paket_soal')
                 ->where([
+                    ['tbl_kategori_soal.id_kategori_soal', 'KAT002'],
                     ['tbl_role_soal.id_prodi', $id_prodi],
                     ['tbl_role_soal.status', 'aktif']
                     ])
+                ->orWhere('tbl_kategori_soal.id_kategori_soal', 'KAT003')    
                 ->get();
- 
+        }
+
+
         $id_mhs = Auth::user()->id;
 
         return view('mhs.ujian.index', compact('data_paket','id_mhs'));
